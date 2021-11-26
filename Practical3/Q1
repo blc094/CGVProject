@@ -1,0 +1,109 @@
+// 1. Write a C/C++ program to following lines using OpenGL.
+
+#include "CGPracticals.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+namespace p31 {
+	void init()
+	{
+		// Set display window color to as glClearColor(R,G,B,Alpha)
+		glClearColor(1.0, 1.0, 1.0, 0.0);
+		// Set projection parameters.
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		// Set 2D Transformation as gluOrtho2D(Min Width, Max Width, Min Height, Max Height)
+		gluOrtho2D(0.0, 1000, 0.0, 480);
+	}
+	void drawCoordinateString(int x, int y) {
+		char string[30];
+
+		sprintf_s(string, "(%d,%d)", x, y);
+		glRasterPos2i(x, y);
+		glPointSize(5.0);
+		glBegin(GL_POINTS);
+		glVertex2i(x, y);
+		glEnd();
+		glPointSize(1.0);
+		for (const char* c = string; *c != '\0'; c++)
+		{
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c); //Update the Position
+		}
+		glPointSize(1.0);
+	}
+	struct POINTS {
+		int x;
+		int y;
+		POINTS() {
+			x = 0;
+			y = 0;
+		}
+	};
+	void render()
+	{
+		//Roof
+		glClear(GL_COLOR_BUFFER_BIT);     // Clear display window
+		// Set line segment color as glColor3f(R,G,B)
+		glColor3f(0.0, 0.0, 0.8);
+		int iX = 0;
+		int iLen = 0;
+		double zoofactor = 2.0;
+		POINTS p[5];
+		p[iLen].x = iX + 180 * zoofactor; p[iLen++].y = 100* zoofactor;
+		p[iLen].x = iX + 80 * zoofactor; p[iLen++].y = 80 * zoofactor;
+		p[iLen].x = iX + 120 * zoofactor; p[iLen++].y = 120 * zoofactor;
+		p[iLen].x = iX + 160 * zoofactor; p[iLen++].y = 80 * zoofactor;
+		p[iLen].x = iX + 60 * zoofactor; p[iLen++].y = 100 * zoofactor;
+		
+		iX = -150;
+		glBegin(GL_LINES);
+		for(int i = 0; i < iLen; i++)
+			glVertex2i(iX + p[i].x, p[i].y);
+		
+		glEnd();
+
+		iX = 200;
+		glBegin(GL_LINE_STRIP);
+
+		for (int i = 0; i < iLen; i++)
+			glVertex2i(iX + p[i].x, p[i].y);
+
+		glEnd();
+
+		iX = 600;
+		glBegin(GL_LINE_LOOP);
+
+		for (int i = 0; i < iLen; i++)
+			glVertex2i(iX + p[i].x, p[i].y);
+
+		glEnd();
+
+		/*drawCoordinateString(90, 50);
+		drawCoordinateString(40, 40);
+		drawCoordinateString(60, 60);
+		drawCoordinateString(80, 40);
+		drawCoordinateString(30, 50);*/
+
+		glFlush();
+	}
+	void main(int argc, char** argv)
+	{
+		// Initialize GLUT
+		glutInit(&argc, argv);
+		// Set display mode
+		glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+		// Set top - left display window position.
+		glutInitWindowPosition(100, 100);
+		// Set display window width and height
+		glutInitWindowSize(640, 480);
+		// Create display window with the given title
+		glutCreateWindow("Practical 3.1_19012011094");
+		// Execute initialization procedure
+		init();
+		// Send graphics to display window
+		glutDisplayFunc(render);
+		// Display everything and wait.
+		glutMainLoop();
+	}
+}
