@@ -1,0 +1,71 @@
+// 5. Write a C/C++ program to draw hut as given in image by using Bresenham’s line drawing algorithm.
+
+
+#include "CGPracticals.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+namespace p35 {
+	void setPixel(double x, double y)
+	{
+		glBegin(GL_POINTS);
+		glVertex2d(x, y);
+		glEnd();
+	}
+	void LineDDA(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2)
+	{
+		GLdouble dx = x2 - x1, dy = y2 - y1, steps;
+		float xInc, yInc, x = x1, y = y1;
+		steps = (fabs(dx) > fabs(dy)) ? fabs(dx) : fabs(dy);
+		xInc = dx / (float)steps;
+		yInc = dy / (float)steps;
+		setPixel(x, y);
+		for (int k = 0; k < steps; k++)
+		{
+			x += xInc;
+			y += yInc;
+			setPixel(x, y);
+		}
+	}
+	void display() {
+		glClearColor(0, 0, 0, 0.0);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glColor3f(1.0, 0.4, 0.0);
+		LineDDA(30, 20, 30, 400);
+		LineDDA(30, 20, 280, 20);
+		LineDDA(280, 20, 280, 400);
+		LineDDA(30, 400, 155, 600);
+		LineDDA(280, 400, 155, 600);
+		LineDDA(280, 400, 30, 400);
+		LineDDA(280, 20, 790, 20);
+		LineDDA(790, 20, 790, 400);
+		LineDDA(280, 400, 790, 400);
+		LineDDA(155, 600, 700, 600);
+		LineDDA(700, 600, 790, 400);
+		LineDDA(105, 200, 205, 200);
+		LineDDA(205, 20, 205, 200);
+		LineDDA(105, 200, 105, 20);
+		glFlush();
+	}
+	int width = 840;
+	int height = 640;
+	void Init() {
+		glClearColor(1.0, 1.0, 1.0, 0);
+		glColor3f(0.0, 0.0, 0.0);
+		glViewport(0, 0, width, height);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluOrtho2D(0, width, 0, height);
+	}
+	void main(int argc, char** argv) {
+		glutInit(&argc, argv);
+		glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+		glutInitWindowSize(width, height);
+		glutInitWindowPosition(0, 0);
+		glutCreateWindow("19012011094_HUT");
+		Init();
+		glutDisplayFunc(display);
+		glutMainLoop();
+	}
+}
