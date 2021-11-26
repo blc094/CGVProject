@@ -1,0 +1,75 @@
+/* 2. Write a C/C++ program to draw a line using DDA line drawing algorithm.
+Example:
+Line1(10,10), (100,100)
+Line2(10,10), (100,30)
+Line3(200,100), (20,40)
+Line4(10,200), (200,10) */
+
+
+#include "CGPracticals.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+namespace p32 {
+	void setPixel(double x, double y)
+	{
+		glBegin(GL_POINTS);
+		glVertex2d(x, y);
+		glEnd();
+	}
+	void LineDDA(GLdouble X1, GLdouble Y1, GLdouble X2, GLdouble Y2)
+	{
+		GLdouble dx = X2 - X1, dy = Y2 - Y1, steps;
+		float xInc, yInc, x = X1, y = Y1;
+		steps = (fabs(dx) > fabs(dy)) ? fabs(dx) : fabs(dy);
+		xInc = dx / (float)steps;
+		yInc = dy / (float)steps;
+		setPixel(x, y);
+		for (int k = 0; k < steps; k++)
+		{
+			x += xInc;
+			y += yInc;
+			setPixel(x, y);
+		}
+	}
+	void display()
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
+		/*
+		Line1(10,10), (100,100)
+		Line2 (10,10), (100,30)
+		Line3 (200,100), (20,40)
+		Line4 (10,200), (200,10)
+		*/
+		LineDDA(10, 10, 100, 100);
+		LineDDA(10, 10, 100, 30);
+		LineDDA(200, 100, 20, 40);
+		LineDDA(10, 200, 200, 10);
+
+		glFlush();
+	}
+	int width = 640;
+	int height = 480;
+	void Init()
+	{
+		glClearColor(1.0, 1.0, 1.0, 0);
+		glColor3f(0.0, 0.0, 0.0);
+		glViewport(0, 0, width, height);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluOrtho2D(0, width, 0, height);
+	}
+	void main(int argc, char** argv)
+	{
+
+		glutInit(&argc, argv);
+		glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+		glutInitWindowSize(width, height);
+		glutInitWindowPosition(0, 0);
+		glutCreateWindow("LineDDA");
+		Init();
+		glutDisplayFunc(display);
+		glutMainLoop();
+	}
+}
